@@ -19,18 +19,8 @@ public class AuthConfig {
     private final UserService userService;
 
     @Bean
-    public UserDetailsService userDetailsService() {
-        return userService;
-    }
-
-    @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
         return config.getAuthenticationManager();
-    }
-
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder(10);
     }
 
     @Bean
@@ -40,4 +30,15 @@ public class AuthConfig {
         authProvider.setPasswordEncoder(passwordEncoder());
         return authProvider;
     }
+
+    @Bean
+    public UserDetailsService userDetailsService() {
+        return userService;
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
 }

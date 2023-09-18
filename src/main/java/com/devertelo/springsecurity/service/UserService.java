@@ -1,6 +1,6 @@
 package com.devertelo.springsecurity.service;
 
-import com.devertelo.springsecurity.controller.UserDTO;
+import com.devertelo.springsecurity.controller.user.UserDTO;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -15,7 +15,7 @@ public class UserService implements UserDetailsService {
     private List<UserDTO> users = new ArrayList<>();
 
     public UserService() {
-        users.add(new UserDTO("joao", "joao", "senha"));
+        users.add(new UserDTO("joao", "joao", "$2a$10$PIsCJpHH6ukAIyv1AFemu.VOew5AVYzrX6KJLdfjwwJcAWJHJN/m."));
     }
 
     @Override

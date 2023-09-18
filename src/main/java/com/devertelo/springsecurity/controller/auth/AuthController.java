@@ -1,11 +1,12 @@
-package com.devertelo.springsecurity.controller;
+package com.devertelo.springsecurity.controller.auth;
 
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -17,16 +18,18 @@ public class AuthController {
     private final AuthenticationManager authenticationManager;
 
     @PostMapping("/login")
-    public ResponseEntity<TokenResponse> login(LoginRequest loginRequest) {
+    public ResponseEntity<TokenResponse> login(@RequestBody LoginRequest loginRequest) {
+        try {
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(loginRequest.username(), loginRequest.password())
+            );
 
-        Authentication authenticate = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.username(), loginRequest.password()));
+            return ResponseEntity.ok(new TokenResponse(null));
 
-        if (authenticate.isAuthenticated()) {
+        } catch (Exception exception) {
 
-            String token = "";
-            return ResponseEntity.ok(new TokenResponse(token));
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
-        return ResponseEntity.badRequest().build();
     }
 
 }

@@ -1,4 +1,4 @@
-package com.devertelo.springsecurity.controller;
+package com.devertelo.springsecurity.controller.user;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
