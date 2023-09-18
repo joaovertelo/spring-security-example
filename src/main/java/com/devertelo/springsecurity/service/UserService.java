@@ -1,27 +1,33 @@
 package com.devertelo.springsecurity.service;
 
+import com.devertelo.springsecurity.controller.auth.RegisterRequest;
 import com.devertelo.springsecurity.controller.user.UserDTO;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class UserService implements UserDetailsService {
+public class UserService {
 
+    private final PasswordEncoder passwordEncoder;
     private List<UserDTO> users = new ArrayList<>();
 
-    public UserService() {
-        users.add(new UserDTO("joao", "joao", "$2a$10$PIsCJpHH6ukAIyv1AFemu.VOew5AVYzrX6KJLdfjwwJcAWJHJN/m."));
+    public UserService(PasswordEncoder passwordEncoder) {
+        this.passwordEncoder = passwordEncoder;
+        users.add(new UserDTO("joao", passwordEncoder.encode("senha"),
+                List.of(Role.ADMIN)));
     }
 
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return users.stream()
-                .filter(user1 -> user1.getUsername().equals(username))
-                .findFirst().orElseThrow();
+    public List<UserDTO> getUsers() {
+        return users;
+    }
+
+    public UserDetails register(RegisterRequest registerRequest) {
+        UserDTO userDetails = new UserDTO(registerRequest.username(), passwordEncoder.encode(registerRequest.password()), registerRequest.roles());
+        users.add(userDetails);
+        return userDetails;
     }
 }
